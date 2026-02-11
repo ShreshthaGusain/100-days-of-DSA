@@ -43,6 +43,10 @@ int main() {
     }
     return 0;
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> b60ff53f130f3276be38282974cfdff488f5db9f
 // Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.
 
 // You may assume that each input would have exactly one solution, and you may not use the same element twice.
@@ -102,4 +106,8 @@ int main() {
     }
 
     return 0;
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> b60ff53f130f3276be38282974cfdff488f5db9f
