@@ -27,64 +27,68 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct Node {
-    int coeff;
-    int exp;
-    struct Node* next;
-} Node;
+typedef struct poly{
+    int pow;
+    float coeff;
+    struct poly *next;
+}poly;
 
-Node* createTerm(int c, int e) {
-    Node* newNode = (Node*)malloc(sizeof(Node));
-    newNode->coeff = c;
-    newNode->exp = e;
-    newNode->next = NULL;
-    return newNode;
+poly *createNode(int p,float c){
+    poly *newN=(poly *)malloc(sizeof(poly));
+    newN->next=NULL;
+    newN->coeff=c;
+    newN->pow=p;
+    return newN;
 }
 
-Node* insertTerm(Node* head, int c, int e) {
-    Node* newNode = createTerm(c, e);
-    if (head == NULL) return newNode;
-
-    Node* temp = head;
-    while (temp->next != NULL) {
-        temp = temp->next;
+poly *IAtEnd(poly *head,int pow,float coeff){
+    poly *nnode=createNode(pow,coeff);
+    if(head==NULL){
+        return nnode;
     }
-    temp->next = newNode;
+    poly *tnode=head;
+    while(tnode->next!=NULL){
+        tnode=tnode->next;
+    }
+    tnode->next=nnode;
     return head;
 }
 
-void displayPolynomial(Node* head) {
-    Node* temp = head;
-    while (temp != NULL) {
-        if (temp->exp == 0) {
-            printf("%d", temp->coeff); 
-        } else if (temp->exp == 1) {
-            printf("%dx", temp->coeff); 
-        } else {
-            printf("%dx^%d", temp->coeff, temp->exp); 
+void display(poly *head){
+    poly *temp=head;
+    while(temp!=NULL){
+        if(temp->pow>1){
+            printf("%.0fx^%d",temp->coeff,temp->pow);
         }
-
-        if (temp->next != NULL) {
-            printf(" + ");
+        else if(temp->pow==1){
+            printf("%.0fx",temp->coeff);
         }
-
-        temp = temp->next;
+        else{
+            printf("%.0f",temp->coeff);
+        }
+        if(temp->next!=NULL){
+        printf(" + ");
+        }
+        temp=temp->next;
     }
-    printf("\n");
+    
+    return;
 }
 
-int main() {
-    Node* poly = NULL;
-    int n, c, e;
 
-    if (scanf("%d", &n) != 1) return 0;
+int main() {
+    poly *poly=NULL;
+    int n,pow;
+    float coeff;
+
+    scanf("%d",&n);
 
     for (int i = 0; i < n; i++) {
-        scanf("%d %d", &c, &e);
-        poly = insertTerm(poly, c, e);
+        scanf("%f %d",&coeff,&pow);
+        poly=IAtEnd(poly,pow,coeff);
     }
 
-    displayPolynomial(poly);
+    display(poly);
 
     return 0;
 }
