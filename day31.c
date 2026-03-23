@@ -26,50 +26,53 @@
 // 20 10
 // 20
 // 10
-
 #include <stdio.h>
-#include <stdlib.h>
+#define CAPACITY 5
 
-#define MAX 5
+typedef struct Stack {
+    int top;
+    int data[CAPACITY];
+} Stack;
 
-int stack[MAX];
-int top = -1;
-
-void push(int value) {
-    if (top >= MAX - 1) {
-        return;
-    }
-    stack[++top] = value;
+void initialize(Stack *s) {
+    s->top = -1;
 }
-void pop() {
-    if (top == -1) {
+void push(Stack *s, int val) {
+    if (s->top < CAPACITY - 1) {
+        s->data[++(s->top)] = val;
+    }
+}
+void pop(Stack *s) {
+    if (s->top == -1) {
         printf("Stack Underflow\n");
     } else {
-        printf("%d\n", stack[top--]);
+        printf("%d\n", s->data[s->top--]);
     }
 }
-void display() {
-    if (top == -1) {
-        return; 
-    }
-    for (int i = top; i >= 0; i--) {
-        printf("%d ", stack[i]);
+void display(Stack *s) {
+    for (int i = s->top; i >= 0; i--) {
+        printf("%d%s", s->data[i], (i == 0 ? "" : " "));
     }
     printf("\n");
 }
 
 int main() {
-    int n, choice, value;
-    if (scanf("%d", &n) != 1) return 0;
+    Stack myStack;
+    initialize(&myStack);
+    int n, op, val;
+    scanf("%d", &n);
+
     for (int i = 0; i < n; i++) {
-        scanf("%d", &choice);
-        if (choice == 1) {
-            scanf("%d", &value);
-            push(value);
-        } else if (choice == 2) {
-            pop();
-        } else if (choice == 3) {
-            display();
+        scanf("%d", &op);
+        if(op==1){
+            scanf("%d", &val);
+            push(&myStack, val);
+        }
+        else if(op==2){
+            pop(&myStack);
+        }
+        else if(op==3){
+            display(&myStack);
         }
     }
     return 0;
