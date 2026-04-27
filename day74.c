@@ -19,53 +19,43 @@
 
 // Explanation
 // Both john and johnny receive 4 votes, but john is lexicographically smaller, so john is declared the winner.
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
-#include <iostream>
-#include <vector>
-#include <string>
-#include <unordered_map>
-#include <algorithm>
-
-using namespace std;
-
-void findWinner(int n, vector<string>& votes) {
-    unordered_map<string, int> voteCount;
-
-    // 1. Fill the Hash Map with counts
-    for (const string& name : votes) {
-        voteCount[name]++;
-    }
-
-    string winner = "";
-    int maxVotes = 0;
-
-    // 2. Iterate through the map to find the max
-    for (auto const& [name, count] : voteCount) {
-        if (count > maxVotes) {
-            maxVotes = count;
-            winner = name;
-        } 
-        // 3. Handle lexicographical tie
-        else if (count == maxVotes) {
-            if (winner == "" || name < winner) {
-                winner = name;
-            }
-        }
-    }
-
-    cout << winner << " " << maxVotes << endl;
+// Standard comparator for qsort
+int compare(const void* a, const void* b) {
+    return strcmp(*(const char**)a, *(const char**)b);
 }
 
 int main() {
     int n;
-    if (!(cin >> n)) return 0;
-    
-    vector<string> votes(n);
+    scanf("%d", &n);
+    char** votes = malloc(n * sizeof(char*));
     for (int i = 0; i < n; i++) {
-        cin >> votes[i];
+        votes[i] = malloc(100 * sizeof(char));
+        scanf("%s", votes[i]);
     }
 
-    findWinner(n, votes);
+    // Sort names lexicographically
+    qsort(votes, n, sizeof(char*), compare);
 
+    char* winner = votes[0];
+    int maxVotes = 0, currentVotes = 1;
+
+    for (int i = 1; i <= n; i++) {
+        // If name changes or we reach end, check counts
+        if (i == n || strcmp(votes[i], votes[i-1]) != 0) {
+            if (currentVotes > maxVotes) {
+                maxVotes = currentVotes;
+                winner = votes[i-1];
+            }
+            currentVotes = 1;
+        } else {
+            currentVotes++;
+        }
+    }
+
+    printf("%s %d\n", winner, maxVotes);
     return 0;
 }
