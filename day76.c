@@ -22,48 +22,54 @@
 // Explanation
 // Components: {1,2,3}, {4}, {5,6}
 
-#include <iostream>
-#include <vector>
+#include <stdio.h>
+#include <stdlib.h>
 
-using namespace std;
+typedef struct Node {
+    int dest;
+    struct Node* next;
+} Node;
 
-// Standard DFS to mark all nodes in a component
-void dfs(int u, vector<int> adj[], vector<bool>& visited) {
-    visited[u] = true;
-    for (int v : adj[u]) {
-        if (!visited[v]) {
-            dfs(v, adj, visited);
-        }
+void dfs(int u, Node* adj[], int visited[]) {
+    visited[u] = 1;
+    Node* temp = adj[u];
+    while (temp) {
+        if (!visited[temp->dest]) dfs(temp->dest, adj, visited);
+        temp = temp->next;
     }
 }
 
-int countComponents(int n, vector<int> adj[]) {
-    vector<bool> visited(n + 1, false);
-    int components = 0;
-
-    for (int i = 1; i <= n; i++) {
-        // If we hit an unvisited node, it's a new island/component
-        if (!visited[i]) {
-            components++;
-            dfs(i, adj, visited);
-        }
-    }
-    return components;
+void addEdge(Node* adj[], int u, int v) {
+    Node* newNode = malloc(sizeof(Node));
+    newNode->dest = v;
+    newNode->next = adj[u];
+    adj[u] = newNode;
 }
 
 int main() {
     int n, m;
-    if (!(cin >> n >> m)) return 0;
-
-    vector<int> adj[n + 1];
-    for (int i = 0; i < m; i++) {
-        int u, v;
-        cin >> u >> v;
-        adj[u].push_back(v);
-        adj[v].push_back(u);
+    scanf("%d %d", &n, &m);
+    Node* adj[n + 1];
+    int visited[n + 1];
+    for (int i = 0; i <= n; i++) {
+        adj[i] = NULL;
+        visited[i] = 0;
     }
 
-    cout << countComponents(n, adj) << endl;
+    for (int i = 0; i < m; i++) {
+        int u, v;
+        scanf("%d %d", &u, &v);
+        addEdge(adj, u, v);
+        addEdge(adj, v, u);
+    }
 
+    int count = 0;
+    for (int i = 1; i <= n; i++) {
+        if (!visited[i]) {
+            count++;
+            dfs(i, adj, visited);
+        }
+    }
+    printf("%d\n", count);
     return 0;
 }
