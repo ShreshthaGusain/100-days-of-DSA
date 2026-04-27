@@ -18,48 +18,23 @@
 // Explanation
 // The subarray [-2, 2, -8, 1, 7] has a sum of 0 and is the longest such subarray.
 
-#include <iostream>
-#include <vector>
-#include <unordered_map>
-#include <algorithm>
-
-using namespace std;
-
-int maxLen(vector<int>& arr) {
-    unordered_map<int, int> first_occurrence;
-    int sum = 0;
-    int maxLength = 0;
-
-    for (int i = 0; i < arr.size(); i++) {
-        sum += arr[i];
-
-        // Case 1: Prefix sum itself is 0
-        if (sum == 0) {
-            maxLength = i + 1;
-        }
-
-        // Case 2: Prefix sum has been seen before
-        if (first_occurrence.find(sum) != first_occurrence.end()) {
-            // Calculate length between current index and first occurrence
-            int currentLength = i - first_occurrence[sum];
-            maxLength = max(maxLength, currentLength);
-        } else {
-            // Store only the first occurrence to maximize the subarray length
-            first_occurrence[sum] = i;
-        }
-    }
-
-    return maxLength;
-}
+#include <stdio.h>
 
 int main() {
-    int val;
-    vector<int> arr;
-    // Reading input until EOF or non-integer
-    while (cin >> val) {
-        arr.push_back(val);
-    }
+    int arr[1000], n = 0;
+    while (scanf("%d", &arr[n]) != EOF) n++;
 
-    cout << maxLen(arr) << endl;
+    int maxLen = 0;
+    for (int i = 0; i < n; i++) {
+        int currSum = 0;
+        for (int j = i; j < n; j++) {
+            currSum += arr[j];
+            if (currSum == 0) {
+                int len = j - i + 1;
+                if (len > maxLen) maxLen = len;
+            }
+        }
+    }
+    printf("%d\n", maxLen);
     return 0;
 }
